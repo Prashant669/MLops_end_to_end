@@ -20,12 +20,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install -r sentiment-analysis/requirements.txt
           pip install dvc mlflow
 
       - name: Run DVC pipeline
         env:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
         run: |
-          cd sentiment_analysis
+          cd sentiment-analysis
           dvc repro
