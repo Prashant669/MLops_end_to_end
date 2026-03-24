@@ -1,5 +1,0 @@
-outs:
-- md5: 890e1231b613505bc4327ebf15bd6843
-  size: 2101
-  hash: md5
-  path: train_model.py
