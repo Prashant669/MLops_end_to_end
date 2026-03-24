@@ -27,4 +27,5 @@ jobs:
         env:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
         run: |
+          cd sentiment_analysis
           dvc repro
