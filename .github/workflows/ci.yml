@@ -3,7 +3,7 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main
+      - mlops_end_to_end
 
 jobs:
   train-and-test:
