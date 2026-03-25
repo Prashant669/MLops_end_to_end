@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r sentiment-analysis/requirements.txt
+          pip install -r requirements.txt
           pip install dvc dvc-s3 mlflow
 
       - name: Pull data from S3
