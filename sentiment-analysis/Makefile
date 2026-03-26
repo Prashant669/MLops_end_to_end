@@ -5,7 +5,7 @@
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = sentiment-analysis-deployment-mlops
+BUCKET = sentiment-analysis-mlops
 PROFILE = default
 PROJECT_NAME = sentiment-analysis
 PYTHON_INTERPRETER = python3

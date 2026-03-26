@@ -1,0 +1,9 @@
+.git
+.dvc
+data/
+mlruns/
+notebooks/
+__pycache__
+*.pyc
+.env
+models/

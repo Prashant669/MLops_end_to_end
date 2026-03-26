@@ -20,7 +20,7 @@ model_path = sys.argv[1]
 tfidf_path = sys.argv[2]
 local_model_path = s3_model_path = model_path
 localtfidf_path = s3_tfidf_path = tfidf_path
-s3_bucket_name = 'sentiment-analysis-deployment-mlops'
+s3_bucket_name = 'sentiment-analysis-mlops'
 
 upload_to_s3(local_model_path, s3_bucket_name, s3_model_path)
 upload_to_s3(localtfidf_path, s3_bucket_name, s3_tfidf_path)

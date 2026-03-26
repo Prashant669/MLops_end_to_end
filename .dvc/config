@@ -1,5 +1,5 @@
 [core]
     remote = s3remote
 ['remote "s3remote"']
-    url = s3://sentiment-analysis-deployment-mlops/data
-    region = eu-north-1
+    url = s3://sentiment-analysis-mlops/data
+    region = ap-southeast-2
