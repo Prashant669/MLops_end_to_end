@@ -63,8 +63,8 @@ model_name = f"random_forest_v{version}"
 with mlflow.start_run():
 
     # 1. Log your hyperparameters
-    n_estimators = 300
-    max_depth = 5
+    n_estimators = 400
+    max_depth = 8
     mlflow.log_param("n_estimators", n_estimators)
     mlflow.log_param("max_depth", max_depth)
 
