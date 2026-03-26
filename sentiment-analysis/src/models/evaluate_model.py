@@ -36,8 +36,8 @@ print(f"Latest run accuracy : {accuracy:.4f}")
 print(f"Threshold           : {ACCURACY_THRESHOLD}")
 
 if accuracy < ACCURACY_THRESHOLD:
-    print(f"FAILED: Accuracy is below threshold. Model will NOT be pushed.")
+    print("FAILED: Accuracy is below threshold. Model will NOT be pushed.")
     sys.exit(1)
 else:
-    print(f"PASSED: Accuracy meets the threshold. Model is ready to push.")
+    print("PASSED: Accuracy meets the threshold. Model is ready to push.")
     sys.exit(0)
