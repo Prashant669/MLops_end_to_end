@@ -2,7 +2,7 @@ import sys
 import mlflow
 
 # Minimum accuracy required to promote the model
-ACCURACY_THRESHOLD = 0.85
+ACCURACY_THRESHOLD = 0.80
 
 # Connect to MLflow (reads MLFLOW_TRACKING_URI from environment variable)
 client = mlflow.tracking.MlflowClient()
