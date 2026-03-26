@@ -6,8 +6,52 @@ on:
       - mlops_end_to_end
 
 jobs:
-  train-and-test:
+
+  # ── Job 1: Lint ────────────────────────────────────────────────────────────
+  code-quality:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8 lint
+        run: flake8 sentiment-analysis/src/ --max-line-length=79 --max-complexity=10
+
+  # ── Job 2: Unit Tests ──────────────────────────────────────────────────────
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: code-quality
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install pytest scikit-learn
+
+      - name: Run unit tests
+        run: |
+          cd sentiment-analysis
+          python -m pytest tests/ -v
+
+  # ── Job 3: Train ───────────────────────────────────────────────────────────
+  train:
+    runs-on: ubuntu-latest
+    needs: unit-tests
 
     steps:
       - name: Checkout code
@@ -31,11 +75,74 @@ jobs:
           cd sentiment-analysis
           dvc pull
 
-      - name: Run DVC pipeline
+      - name: Train model
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
         run: |
           cd sentiment-analysis
-          dvc repro
+          dvc repro train_model
+
+      - name: Upload trained models as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-models
+          path: |
+            sentiment-analysis/models/sentiment_analysis.joblib
+            sentiment-analysis/models/tfidf.joblib
+
+  # ── Job 4: Evaluate ────────────────────────────────────────────────────────
+  evaluate:
+    runs-on: ubuntu-latest
+    needs: train
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install mlflow
+        run: pip install mlflow
+
+      - name: Evaluate model accuracy
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+        run: |
+          cd sentiment-analysis
+          python src/models/evaluate_model.py
+
+  # ── Job 5: Push Model ──────────────────────────────────────────────────────
+  push-model:
+    runs-on: ubuntu-latest
+    needs: evaluate
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install boto3 botocore
+
+      - name: Download trained models
+        uses: actions/download-artifact@v4
+        with:
+          name: trained-models
+          path: sentiment-analysis/models/
+
+      - name: Push model to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd sentiment-analysis
+          python src/models/push_model.py models/sentiment_analysis.joblib models/tfidf.joblib
