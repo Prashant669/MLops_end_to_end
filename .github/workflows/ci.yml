@@ -199,6 +199,8 @@ jobs:
           aws ecs describe-task-definition \
             --task-definition ${{ secrets.ECS_TASK_DEFINITION }} \
             --query taskDefinition > task-definition.json
+          # Remove unsupported keys from older action versions
+          jq 'del(.enableFaultInjection)' task-definition.json > tmp.json && mv tmp.json task-definition.json
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -206,7 +208,7 @@ jobs:
 
       - name: Update task definition with new image
         id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v2
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
           container-name: ${{ secrets.ECS_CONTAINER_NAME }}
