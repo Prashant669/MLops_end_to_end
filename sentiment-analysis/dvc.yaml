@@ -4,9 +4,11 @@ stages:
     deps: 
       - src/models/train_model.py
       - data/raw/IMDB_Dataset.csv
-    outs: 
-      - models/sentiment_analysis.joblib
-      - models/sentiment_analysis.joblib
+    outs:
+      - models/sentiment_analysis.joblib:
+          cache: false
+      - models/tfidf.joblib:
+          cache: false
 
   push_model:
     cmd: python src/models/push_model.py models/sentiment_analysis.joblib models/tfidf.joblib
