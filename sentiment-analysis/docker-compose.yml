@@ -8,4 +8,4 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=ap-southeast-2
-      - MODEL_BUCKET=sentiment-analysis-mlops
+      - MODEL_BUCKET=sentiment-analysis-mlops-learning
